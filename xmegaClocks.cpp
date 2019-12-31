@@ -90,7 +90,7 @@ void init_clock(int sysclk, int pll, bool doAutocalibration, uint8_t calibration
  *
  *  \param  clkSource    Clock source to calibrate, either OSC_RC2MCREF_bm or
  *                       OSC_RC32MCREF_bm.
- *  \param  extReference True if external crystal should be used as reference.
+ *  \param  bextReference True if external crystal should be used as reference.
  */
 void CLKSYS_AutoCalibration_Enable( uint8_t clkSource, bool extReference )
 {
