@@ -1,6 +1,10 @@
 #ifndef XMEGACLOCKS_H_INCLUDED
 #define XMEGACLOCKS_H_INCLUDED
 
+#include <stdbool.h>
+#include <stdint.h>
+
+
 enum{QUARZ,CLK2M,CLK32M};
 
 void init_clock(int sysclk, int pll, bool doAutocalibration, uint8_t calibrationValue);
