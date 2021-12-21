@@ -58,7 +58,11 @@ void init_clock(int sysclk, int pll, bool doAutocalibration, uint8_t calibration
       if(doAutocalibration==true)
       {
         OSC_RC32KCAL = calibrationValue;
-        CLKSYS_AutoCalibration_Enable(OSC_RC2MCREF_RC32K_gc,false); // OSC_RC32MCREF_bm
+        #if defined (__AVR_ATxmega32E5__)
+
+        #else
+          CLKSYS_AutoCalibration_Enable(OSC_RC2MCREF_RC32K_gc,false); // OSC_RC32MCREF_bm
+        #endif // defined
       }
 		break;
 		case CLK32M:
@@ -92,6 +96,30 @@ void init_clock(int sysclk, int pll, bool doAutocalibration, uint8_t calibration
  *                       OSC_RC32MCREF_bm.
  *  \param  bextReference True if external crystal should be used as reference.
  */
+
+#if defined (__AVR_ATxmega32E5__)
+void CLKSYS_AutoCalibration_Enable( uint8_t clkSource, bool extReference )
+{/*
+	OSC.DFLLCTRL = ( OSC.DFLLCTRL & ~clkSource ) |
+	               ( extReference ? clkSource : 0 );
+	if (clkSource == OSC_RC2MCREF_bm) {
+		DFLLRC2M.CTRL |= DFLL_ENABLE_bm;
+	} else if (clkSource == OSC_RC32MCREF_RC32K_gc) {   // OSC_RC32MCREF_bm
+		DFLLRC32M.CTRL |= DFLL_ENABLE_bm;
+	}*/
+}
+#else
+/*! \brief This function enables automatic calibration of the selected internal
+ *         oscillator.
+ *
+ *  Either the internal 32kHz RC oscillator or an external 32kHz
+ *  crystal can be used as a calibration reference. The user must make sure
+ *  that the selected reference is ready and running.
+ *
+ *  \param  clkSource    Clock source to calibrate, either OSC_RC2MCREF_bm or
+ *                       OSC_RC32MCREF_bm.
+ *  \param  bextReference True if external crystal should be used as reference.
+ */
 void CLKSYS_AutoCalibration_Enable( uint8_t clkSource, bool extReference )
 {
 	OSC.DFLLCTRL = ( OSC.DFLLCTRL & ~clkSource ) |
@@ -102,3 +130,4 @@ void CLKSYS_AutoCalibration_Enable( uint8_t clkSource, bool extReference )
 		DFLLRC32M.CTRL |= DFLL_ENABLE_bm;
 	}
 }
+#endif // defined
